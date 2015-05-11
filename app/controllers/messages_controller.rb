@@ -5,7 +5,7 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params)
 
     if @message.save 
-      status: :created
+      render json: @message, status: :created
     else
       render json: @message.errors, status: :unprocessable_entity
     end
