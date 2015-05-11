@@ -1,44 +1,21 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy, :data]
 
-  # # GET /contacts
-  # # GET /contacts.json
-  # def index
-  #   @contacts = Contact.all
-
-  #   # Search
-  #   @contacts = @contacts.search(params[:q]) if params[:q]
-
-  #   # Filter for relationship
-  #   @contacts = @contacts.relationship(params[:relationship]) if params[:relationship]
-
-  #   # Order by
-  #   @contacts = @contacts.order(params[:order].gsub(':', ' ')) if params[:order]
-
-  #   # Pagination
-  #   if (params[:offset] && params[:limit])
-  #     @contacts = @contacts.page(1).per(params[:limit]).padding(params[:offset])
-  #   else
-  #     @contacts = @contacts.page(1).per(25)
-  #   end
-
-
-  #   render json: @contacts if stale?(etag: @contacts.all, last_modified: @contacts.maximum(:updated_at))
-  # end
-
-  def data
-    render json: @user = User.find(params[:id]) 
+ def data
+    @user = User.find(params[:id]) 
+    render json: @user, :only => [:salt_masterkey, :pubkey_user, :privkey_user_enc]
   end
 
   def pubkey
-    render json: @user = User.find(params[:id]) 
+    @user = User.find(params[:id]) 
+    render json: @user, :only => [:pubkey_user]
   end
 
   def create
     @user = User.new(user_params)
 
-    if @user.save
-      render json: @user, status: :created
+    if @user.save 
+    render json: @user, :only => [:id], status: :created
     else
       render json: @user.errors, status: :unprocessable_entity
     end
