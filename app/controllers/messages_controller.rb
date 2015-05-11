@@ -1,6 +1,21 @@
 class MessagesController < ApplicationController
   before_action :set_message, only: [:show, :update, :destroy, :data]
 
+  def send
+    @message = Message.new(message_params)
+
+    if @message.save 
+      status: :created
+    else
+      render json: @message.errors, status: :unprocessable_entity
+    end
+  end
+
+  def recieve
+    @message = Message.find(params[:id]) 
+    render json: @message, :only => [:id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient]
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
