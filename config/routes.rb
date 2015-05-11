@@ -1,4 +1,11 @@
-Rails.application.routes.draw do
+  Rails.application.routes.draw do
+  post    "/id",          to: "users#create"
+  get     "/:id",         to: "users#data"
+  get     "/:id/pubkey",  to: "users#pubkey"
+
+      # get     "/contacts/:id", to: "contacts#show"
+      # put     "/contacts/:id", to: "contacts#update"
+      # delete  "/contacts/:id", to: "contacts#destroy"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
