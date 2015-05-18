@@ -1,2 +1,5 @@
-Could not find generator 'echo'. Maybe you meant 'api_resource_route' or 'test_unit:scaffold' or 'controller'
-Run `rails generate --help` for more options.
+To Do
+- Spezifikation anpassen
+- Logik hinter den Controllern ergänzen
+- "Client" zum Test der anderen Spezifikation entwickeln
+- ...
