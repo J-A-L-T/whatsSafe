@@ -21,24 +21,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # # PATCH/PUT /contacts/1
-  # # PATCH/PUT /contacts/1.json
-  # def update
-  #   if @contact.update(contact_params)
-  #     head :no_content
-  #   else
-  #     render json: @contact.errors, status: :unprocessable_entity
-  #   end
-  # end
-
-  # # DELETE /contacts/1
-  # # DELETE /contacts/1.json
-  # def destroy
-  #   @contact.destroy
-
-  #   head :no_content
-  # end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
