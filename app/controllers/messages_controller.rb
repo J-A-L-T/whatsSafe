@@ -12,8 +12,8 @@ class MessagesController < ApplicationController
   end
 
   def recieve
-    @message = Message.find_by_id_recipient(params[:id_recipient]) 
-    render json: @message, :only => [:id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient]
+    @messages = Message.where(:id_recipient => params[:id_recipient])
+    render json: @messages, :only => [:id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient]
   end
 
 
