@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
-  before_action :set_message, only: [:show, :update, :destroy, :data]
+  before_action :set_message, only: [:show, :update, :destroy]
 
-  def send
+  def create
     @message = Message.new(message_params)
 
     if @message.save 
