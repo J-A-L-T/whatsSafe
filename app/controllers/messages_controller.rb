@@ -12,7 +12,7 @@ class MessagesController < ApplicationController
   end
 
   def recieve
-    @message = Message.find(params[:id]) 
+    @message = Message.find_by_id_recipient(params[:id_recipient]) 
     render json: @message, :only => [:id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient]
   end
 
@@ -20,11 +20,11 @@ class MessagesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_message
-      @Message = Message.find(params[:id])
+      @Message = Message.find(params[:id_recipient])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def message_params
-      params.require(:message).permit(:id_recipient, :id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient)
+      params.require(:message).permit(:timestamp, :id_recipient, :id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient)
     end
 end
