@@ -1,4 +1,12 @@
-Rails.application.routes.draw do
+  Rails.application.routes.draw do
+  post    "/id",          to: "users#create"
+  get     "/:id",         to: "users#data"
+  get     "/:id/pubkey",  to: "users#pubkey"
+  post    "/message",  to: "messages#send"
+  get     "/:id/message",  to: "messages#recieve"
+
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
