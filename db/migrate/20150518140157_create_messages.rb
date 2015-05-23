@@ -7,6 +7,7 @@ class CreateMessages < ActiveRecord::Migration
       t.string :iv
       t.string :key_recipient_enc
       t.string :sig_recipient
+      t.integer :timestamp
 
       t.timestamps null: false
     end

@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20150518140157) do
     t.string   "iv"
     t.string   "key_recipient_enc"
     t.string   "sig_recipient"
+    t.integer  "timestamp"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
   end
