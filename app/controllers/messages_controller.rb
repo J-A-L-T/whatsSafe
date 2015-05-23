@@ -4,16 +4,21 @@ class MessagesController < ApplicationController
   def create
     @outerMessage = OuterMessage.new(outer_message_params)
     @outerMessage.id_recipient = params[:id_recipient]
-    @message = Message.new( :id_recipient => params[:id_recipient],
-                            :id_sender => @outerMessage.id_sender,
-                            :cipher => @outerMessage.cipher,
-                            :iv => @outerMessage.iv,
-                            :key_recipient_enc => @outerMessage.key_recipient_enc,
-                            :sig_recipient => @outerMessage.sig_recipient,)
-    if @message.save 
-      render json: @message, :only => [:id_recipient ,:id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient], status: :created
+
+    if (Time.now.to_i-@outerMessage.timestamp) > 300
+      render json: {"status"=> "1", "Error"=> "Message is older than 5 minutes"}, status: 1
     else
-      render json: @message.errors, status: :unprocessable_entity
+      @message = Message.new( :id_recipient => params[:id_recipient],
+                              :id_sender => @outerMessage.id_sender,
+                              :cipher => @outerMessage.cipher,
+                              :iv => @outerMessage.iv,
+                              :key_recipient_enc => @outerMessage.key_recipient_enc,
+                              :sig_recipient => @outerMessage.sig_recipient,)
+      if @message.save 
+        render json: @message, :only => [:id_recipient ,:id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient], status: :created
+      else
+        render json: @message.errors, status: :unprocessable_entity
+      end
     end
   end
 
