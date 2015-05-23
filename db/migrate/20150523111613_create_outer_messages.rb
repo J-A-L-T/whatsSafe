@@ -1,6 +1,8 @@
-class CreateMessages < ActiveRecord::Migration
+class CreateOuterMessages < ActiveRecord::Migration
   def change
-    create_table :messages do |t|
+    create_table :outer_messages do |t|
+      t.integer :timestamp
+      t.string :sig_service
       t.string :id_recipient
       t.string :id_sender
       t.string :cipher

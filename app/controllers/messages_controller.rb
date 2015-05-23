@@ -5,7 +5,7 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params)
 
     if @message.save 
-      render json: @message, status: :created
+      render json: @message, :only => [:id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient], status: :created
     else
       render json: @message.errors, status: :unprocessable_entity
     end
@@ -25,6 +25,6 @@ class MessagesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def message_params
-      params.require(:message).permit(:timestamp, :id_recipient, :id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient)
+      params.require(:message).permit(:id_recipient, :id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient)
     end
 end
