@@ -14,8 +14,8 @@
 ActiveRecord::Schema.define(version: 20150518140157) do
 
   create_table "messages", force: :cascade do |t|
-    t.string   "id_recipient"
-    t.string   "id_sender"
+    t.integer  "id_recipient"
+    t.integer  "id_sender"
     t.string   "cipher"
     t.string   "iv"
     t.string   "key_recipient_enc"
