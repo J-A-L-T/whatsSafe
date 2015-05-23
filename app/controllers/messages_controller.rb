@@ -3,14 +3,15 @@ class MessagesController < ApplicationController
 
   def create
     @outerMessage = OuterMessage.new(outer_message_params)
-    @message = Message.new( :id_recipient => @outerMessage.id_recipient,
+    @outerMessage.id_recipient = params[:id_recipient]
+    @message = Message.new( :id_recipient => params[:id_recipient],
                             :id_sender => @outerMessage.id_sender,
                             :cipher => @outerMessage.cipher,
                             :iv => @outerMessage.iv,
                             :key_recipient_enc => @outerMessage.key_recipient_enc,
                             :sig_recipient => @outerMessage.sig_recipient,)
     if @message.save 
-      render json: @message, :only => [:id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient], status: :created
+      render json: @message, :only => [:id_recipient ,:id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient], status: :created
     else
       render json: @message.errors, status: :unprocessable_entity
     end
@@ -30,6 +31,6 @@ class MessagesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def outer_message_params
-      params.require(:outerMessage).permit(:timestamp, :sig_service, :id_recipient, :id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient)
+      params.require(:outerMessage).permit(:timestamp, :sig_service, :id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient)
     end
 end

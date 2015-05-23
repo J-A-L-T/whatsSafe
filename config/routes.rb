@@ -2,7 +2,7 @@
   post    "/id",          to: "users#create"
   get     "/:id",         to: "users#data"
   get     "/:id/pubkey",  to: "users#pubkey"
-  post    "/message",     to: "messages#create"
+  post    "/:id_recipient/message",     to: "messages#create"
   get     "/:id_recipient/message", to: "messages#recieve"
 
 
