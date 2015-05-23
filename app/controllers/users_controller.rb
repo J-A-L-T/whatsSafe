@@ -1,6 +1,11 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy, :data]
 
+def addressBook
+  @users = User.all
+    render json: @users, :only => [:id, :salt_masterkey, :pubkey_user, :privkey_user_enc]
+end
+
  def data
     @user = User.find(params[:id]) 
     render json: @user, :only => [:salt_masterkey, :pubkey_user, :privkey_user_enc]

@@ -4,6 +4,7 @@
   get     "/:id/pubkey",  to: "users#pubkey"
   post    "/:id_recipient/message",     to: "messages#create"
   get     "/:id_recipient/message", to: "messages#recieve"
+  get     "/"            => "users#addressBook" 
 
 
 
