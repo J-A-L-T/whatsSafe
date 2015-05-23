@@ -2,8 +2,13 @@ class MessagesController < ApplicationController
   before_action :set_message, only: [:show, :update, :destroy]
 
   def create
-    @message = Message.new(message_params)
-
+    @outerMessage = OuterMessage.new(outer_message_params)
+    @message = Message.new( :id_recipient => @outerMessage.id_recipient,
+                            :id_sender => @outerMessage.id_sender,
+                            :cipher => @outerMessage.cipher,
+                            :iv => @outerMessage.iv,
+                            :key_recipient_enc => @outerMessage.key_recipient_enc,
+                            :sig_recipient => @outerMessage.sig_recipient,)
     if @message.save 
       render json: @message, :only => [:id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient], status: :created
     else
@@ -24,7 +29,7 @@ class MessagesController < ApplicationController
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
-    def message_params
-      params.require(:message).permit(:id_recipient, :id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient)
+    def outer_message_params
+      params.require(:outerMessage).permit(:timestamp, :sig_service, :id_recipient, :id_sender, :cipher, :iv, :key_recipient_enc, :sig_recipient)
     end
 end
