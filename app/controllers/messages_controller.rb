@@ -23,6 +23,7 @@ class MessagesController < ApplicationController
         # ----- WICHITG BASE64 DECODE - "aus als String empfangenen Kryptosachen wieder echte machen" => Base64.decode64("String") ----- #
 
         # => Krypto-Vorbereitung
+        # => Pubkey des Users, der die Nachricht absendet.
         # @pubkey = User.find_by_username(@outerMessage.sender).pubkey_user
         # @signature = @outerMessage.sig_service
         # digest = OpenSSL::Digest::SHA256.new
@@ -66,7 +67,8 @@ class MessagesController < ApplicationController
       # ----- WICHITG BASE64 DECODE - "aus als String empfangenen Kryptosachen wieder echte machen" => Base64.decode64("String") ----- #
       # => Krypto-Vorbereitung
       # digest = OpenSSL::Digest::SHA256.new
-      # @pubkey = User.find(username).pubkey_user
+      # => Pubkey des Users, an den die Nachricht bestimmt ist.
+      # @pubkey = User.find_by_username(params[:username]).pubkey_user
 
       # => Empfang der Parameter
       @timestamp = params[:timestamp].to_f
