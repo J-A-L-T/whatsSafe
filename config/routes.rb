@@ -1,9 +1,9 @@
   Rails.application.routes.draw do
-  post    "/id",          to: "users#create"
-  get     "/:id",         to: "users#data"
-  get     "/:id/pubkey",  to: "users#pubkey"
-  post    "/:id_recipient/message",     to: "messages#create"
-  get     "/:id_recipient/message", to: "messages#recieve"
+  post    "/user",              to: "users#create"
+  get     "/:username",         to: "users#data"
+  get     "/:username/pubkey",  to: "users#pubkey"
+  post    "/:username/message", to: "messages#create"
+  get     "/:username/message", to: "messages#recieve"
   get     "/"            => "users#addressBook" 
 
 

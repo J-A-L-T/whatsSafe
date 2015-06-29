@@ -3,16 +3,16 @@ class UsersController < ApplicationController
 
 def addressBook
   @users = User.all
-    render json: @users, :only => [:id, :salt_masterkey, :pubkey_user, :privkey_user_enc]
+    render json: @users, :only => [:username]
 end
 
  def data
-    @user = User.find(params[:id]) 
+    @user = User.find(params[:username]) 
     render json: @user, :only => [:salt_masterkey, :pubkey_user, :privkey_user_enc]
   end
 
   def pubkey
-    @user = User.find(params[:id]) 
+    @user = User.find(params[:username]) 
     render json: @user, :only => [:pubkey_user]
   end
 
@@ -20,7 +20,7 @@ end
     @user = User.new(user_params)
 
     if @user.save 
-    render json: @user, :only => [:id], status: :created
+      render json: @user, :only => [:username], status: :created
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -29,11 +29,11 @@ end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @User = User.find(params[:id])
+      @User = User.find(params[:username])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:salt_masterkey, :pubkey_user, :privkey_user_enc)
+      params.require(:user).permit(:username, :salt_masterkey, :pubkey_user, :privkey_user_enc)
     end
 end
