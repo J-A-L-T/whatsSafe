@@ -18,11 +18,14 @@ end
 
   def create
     @user = User.new(user_params)
-
-    if @user.save 
-      render json: @user, :only => [:username], status: :created
+    if User.exists?(username: @user.username)
+      render json: { "Status" => "409 Conflict"}, status: :conflict
     else
-      render json: @user.errors, status: :unprocessable_entity
+      if @user.save 
+        render json: @user, :only => [:username, :id], status: :created
+      else
+        render json: @user.errors, status: :unprocessable_entity
+      end
     end
   end
 
