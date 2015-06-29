@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  timestamp: 1
+  sig_service: MyString
+  id_recipient: MyString
+  id_sender: MyString
+  cipher_string: MyString
+  iv: MyString
+  key_recipient_enc: MyString
+  sig_recipient: MyString
+
+two:
+  timestamp: 1
+  sig_service: MyString
+  id_recipient: MyString
+  id_sender: MyString
+  cipher_string: MyString
+  iv: MyString
+  key_recipient_enc: MyString
+  sig_recipient: MyString
