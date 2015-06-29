@@ -4,7 +4,8 @@
   get     "/:username/pubkey",  to: "users#pubkey"
   post    "/:username/message", to: "messages#create"
   get     "/:username/message", to: "messages#recieve"
-  get     "/"            => "users#addressBook" 
+  get     "/"            => "users#addressBook"
+  get     "/test/signatur",               to: "messages#signatur"
 
 
 
