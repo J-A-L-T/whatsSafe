@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20150523111613) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.string   "username"
     t.string   "salt_masterkey"
     t.string   "pubkey_user"
     t.string   "privkey_user_enc"
