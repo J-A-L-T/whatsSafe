@@ -48,7 +48,7 @@ end
       if @user.save 
         render json: @user, :only => [:username, :id], status: :created
         logger.info "################# LOG #################"
-        logger.info "Status: 404 - Not Found"
+        logger.info "Status: 201 - Created "
         logger.info "################# LOG #################"
       else
         render json: @user.errors, status: :unprocessable_entity

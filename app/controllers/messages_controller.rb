@@ -31,7 +31,7 @@ class MessagesController < ApplicationController
         if @message.save 
           render json: @message, :only => [:username ,:sender, :cipher, :iv, :key_recipient_enc, :sig_recipient], status: :created
           logger.info "################# LOG #################"
-          logger.info "Status: 200 - OK"
+          logger.info "Status: 201 - Created "
           logger.info "################# LOG #################"
         else
           render json: @message.errors, status: :unprocessable_entity
