@@ -6,14 +6,23 @@ def addressBook
     render json: @users, :only => [:username]
 end
 
- def data
-    @user = User.find(params[:username]) 
+  def data
+    if User.exists?(username: params[:username])
+    @user = User.find_by_username(params[:username])
     render json: @user, :only => [:salt_masterkey, :pubkey_user, :privkey_user_enc]
+    else
+    render json: { "Status" => "404 Not Found"}, status: :not_found
+    end
   end
 
+
   def pubkey
-    @user = User.find(params[:username]) 
+    if User.exists?(username: params[:username])
+    @user = User.find_by_username(params[:username])
     render json: @user, :only => [:pubkey_user]
+    else
+    render json: { "Status" => "404 Not Found"}, status: :not_found
+    end
   end
 
   def create
@@ -32,7 +41,7 @@ end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @User = User.find(params[:username])
+      @User = User.find_by_username(params[:username])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
