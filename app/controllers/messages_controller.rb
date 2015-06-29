@@ -3,73 +3,87 @@ class MessagesController < ApplicationController
   before_action :set_message, only: [:show, :update, :destroy]
 
   def create
-    @outerMessage = OuterMessage.new(outer_message_params)
-    @outerMessage.recipient = params[:username]
-    if (Time.now.to_i-@outerMessage.timestamp) > 300
-     render json: { "Status" => "408 Request Time-out"}, status: :request_timeout
-     logger.info "################# LOG #################"
-     logger.info "Status: 408 - Request Time-out"
-     logger.info "################# LOG #################"
-    else
-      # @pubkey = User.find(@outerMessage.sender).pubkey_user
-      # @signature = @outerMessage.sig_service
-      # digest = OpenSSL::Digest::SHA256.new
-      # @data = @outerMessage.sender + @outerMessage.cipher + @outerMessage.iv + @outerMessage.key_recipient_enc + @outerMessage.sig_recipient + @outerMessage.timestamp + params[:username]
-      # if @pubkey.verify digest, @signature, @data
-      # else
-      #   render json: { "Status" => "401 Unauthorized"}, status: :unauthorized
-          # logger.info "################# LOG #################"
-          # logger.info "Status: 401 - Unauthorized"
-          # logger.info "################# LOG #################"
-      
-      @message = Message.new( :recipient => params[:username],
+    if !User.exists?(username: params[:username])
+      render json: { "Status" => "404 Not Found"}, status: :not_found
+      logger.info "################# LOG #################"
+      logger.info "Status: 404 - Not Found"
+      logger.info "################# LOG #################"
+    else 
+      @outerMessage = OuterMessage.new(outer_message_params)
+      @outerMessage.recipient = params[:username]
+      if (Time.now.to_i-@outerMessage.timestamp) > 300
+       render json: { "Status" => "408 Request Time-out"}, status: :request_timeout
+       logger.info "################# LOG #################"
+       logger.info "Status: 408 - Request Time-out"
+       logger.info "################# LOG #################"
+      else
+        # @pubkey = User.find_by_username(@outerMessage.sender).pubkey_user
+        # @signature = @outerMessage.sig_service
+        # digest = OpenSSL::Digest::SHA256.new
+        # @data = @outerMessage.sender + @outerMessage.cipher + @outerMessage.iv + @outerMessage.key_recipient_enc + @outerMessage.sig_recipient + @outerMessage.timestamp + params[:username]
+        # if @pubkey.verify digest, @signature, @data
+        # else
+        #   render json: { "Status" => "401 Unauthorized"}, status: :unauthorized
+            # logger.info "################# LOG #################"
+            # logger.info "Status: 401 - Unauthorized"
+            # logger.info "################# LOG #################"
+        
+        @message = Message.new( :recipient => params[:username],
                                 :sender => @outerMessage.sender,
                                 :cipher => @outerMessage.cipher,
                                 :iv => @outerMessage.iv,
                                 :key_recipient_enc => @outerMessage.key_recipient_enc,
                                 :sig_recipient => @outerMessage.sig_recipient,)
-        if @message.save 
-          render json: @message, :only => [:username ,:sender, :cipher, :iv, :key_recipient_enc, :sig_recipient], status: :created
-          logger.info "################# LOG #################"
-          logger.info "Status: 201 - Created "
-          logger.info "################# LOG #################"
-        else
-          render json: @message.errors, status: :unprocessable_entity
-          logger.info "################# LOG #################"
-          logger.info "Status: 422  - Unprocessable Entity"
-          logger.info "################# LOG #################"
+          if @message.save 
+            render json: @message, :only => [:username ,:sender, :cipher, :iv, :key_recipient_enc, :sig_recipient], status: :created
+            logger.info "################# LOG #################"
+            logger.info "Status: 201 - Created "
+            logger.info "################# LOG #################"
+          else
+            render json: @message.errors, status: :unprocessable_entity
+            logger.info "################# LOG #################"
+            logger.info "Status: 422  - Unprocessable Entity"
+            logger.info "################# LOG #################"
+          end
         end
       end
     end
 
   def recieve
-    # Krypto-Vorbereitung
-    # digest = OpenSSL::Digest::SHA256.new
-    # @pubkey = User.find(username).pubkey_user
-
-    # Empfang der Parameter
-    @timestamp = params[:timestamp].to_f
-    @signature = params[:signature]
-    # Time-out-Abfrage
-    if (Time.now.to_i-@timestamp) > 300
-     render json: { "Status" => "408 Request Time-out"}, status: :request_timeout
-     logger.info "################# LOG #################"
-     logger.info "Status: 408 - Request Time-out"
-     logger.info "################# LOG #################"
+    if !User.exists?(username: params[:username])
+      render json: { "Status" => "404 Not Found"}, status: :not_found
+      logger.info "################# LOG #################"
+      logger.info "Status: 404 - Not Found"
+      logger.info "################# LOG #################"
     else
-      # if @pubkey.verify digest, @signature, Identität+Timestamp
-        # Liefern der Nachricht
-        @messages = Message.where(:recipient => params[:username])
-        render json: @messages, :only => [:sender, :cipher, :iv, :key_recipient_enc, :sig_recipient]
-        logger.info "################# LOG #################"
-        logger.info "Status: 200 - OK"
-        logger.info "################# LOG #################"
-      # else
-      #   render json: { "Status" => "401 Unauthorized"}, status: :unauthorized
-          # logger.info "################# LOG #################"
-          # logger.info "Status: 401 - Unauthorized"
-          # logger.info "################# LOG #################"
-      # end
+      # Krypto-Vorbereitung
+      # digest = OpenSSL::Digest::SHA256.new
+      # @pubkey = User.find(username).pubkey_user
+
+      # Empfang der Parameter
+      @timestamp = params[:timestamp].to_f
+      @signature = params[:signature]
+      # Time-out-Abfrage
+      if (Time.now.to_i-@timestamp) > 300
+       render json: { "Status" => "408 Request Time-out"}, status: :request_timeout
+       logger.info "################# LOG #################"
+       logger.info "Status: 408 - Request Time-out"
+       logger.info "################# LOG #################"
+      else
+        # if @pubkey.verify digest, @signature, Identität+Timestamp
+          # Liefern der Nachricht
+          @messages = Message.where(:recipient => params[:username])
+          render json: @messages, :only => [:sender, :cipher, :iv, :key_recipient_enc, :sig_recipient]
+          logger.info "################# LOG #################"
+          logger.info "Status: 200 - OK"
+          logger.info "################# LOG #################"
+        # else
+        #   render json: { "Status" => "401 Unauthorized"}, status: :unauthorized
+            # logger.info "################# LOG #################"
+            # logger.info "Status: 401 - Unauthorized"
+            # logger.info "################# LOG #################"
+        # end
+      end
     end
   end
 
