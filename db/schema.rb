@@ -14,8 +14,8 @@
 ActiveRecord::Schema.define(version: 20150523111613) do
 
   create_table "messages", force: :cascade do |t|
-    t.string   "id_recipient"
-    t.string   "id_sender"
+    t.string   "recipient"
+    t.string   "sender"
     t.string   "cipher"
     t.string   "iv"
     t.string   "key_recipient_enc"
@@ -27,8 +27,8 @@ ActiveRecord::Schema.define(version: 20150523111613) do
   create_table "outer_messages", force: :cascade do |t|
     t.integer  "timestamp"
     t.string   "sig_service"
-    t.string   "id_recipient"
-    t.string   "id_sender"
+    t.string   "recipient"
+    t.string   "sender"
     t.string   "cipher"
     t.string   "iv"
     t.string   "key_recipient_enc"
