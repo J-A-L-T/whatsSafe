@@ -23,7 +23,7 @@ class MessagesController < ApplicationController
         # => Krypto-Vorbereitung
         # => Pubkey des Users, der die Nachricht absendet.
         pubkey = OpenSSL::PKey::RSA.new(Base64.strict_decode64(User.find_by_username(@outerMessage.sender).pubkey_user))
-        sig_service = Base64.strict_encode64(@outerMessage.sig_service)
+        sig_service = Base64.strict_decode64(@outerMessage.sig_service)
         digest = OpenSSL::Digest::SHA256.new
         data =  @outerMessage.sender.to_s +
                 Base64.strict_decode64(@outerMessage.cipher).to_s +
@@ -33,7 +33,7 @@ class MessagesController < ApplicationController
                 @outerMessage.timestamp.to_s +
                 params[:username].to_s
         # => Signatur ist verifiziert? => http://ruby-doc.org/stdlib-2.0/libdoc/openssl/rdoc/OpenSSL.html
-        if pubkey.verify digest, Base64.strict_decode64(sig_service), data
+        if pubkey.verify digest, sig_service, data
         @message = Message.new( :recipient => params[:username],
                                 :sender => @outerMessage.sender,
                                 :cipher => @outerMessage.cipher,
