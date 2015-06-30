@@ -20,28 +20,32 @@ class MessagesController < ApplicationController
        logger.info "Status: 408 - Request Time-out"
        logger.info "################# LOG #################"
       else
-        # ----- WICHITG BASE64 DECODE - "aus als String empfangenen Kryptosachen wieder echte machen" => Base64.decode64("String") ----- #
-
         # => Krypto-Vorbereitung
         # => Pubkey des Users, der die Nachricht absendet.
-        # @pubkey = User.find_by_username(@outerMessage.sender).pubkey_user
-        # @signature = @outerMessage.sig_service
-        # digest = OpenSSL::Digest::SHA256.new
-        # @data = @outerMessage.sender + @outerMessage.cipher + @outerMessage.iv + @outerMessage.key_recipient_enc + @outerMessage.sig_recipient + @outerMessage.timestamp + params[:username]
+        pubkey = OpenSSL::PKey::RSA.new(Base64.strict_decode64(User.find_by_username(@outerMessage.sender).pubkey_user))
+        sig_service = Base64.strict_encode64(@outerMessage.sig_service)
+        digest = OpenSSL::Digest::SHA256.new
+        data =  @outerMessage.sender.to_s +
+                Base64.strict_decode64(@outerMessage.cipher).to_s +
+                Base64.strict_decode64(@outerMessage.iv).to_s +
+                Base64.strict_decode64(@outerMessage.key_recipient_enc).to_s +
+                Base64.strict_decode64(@outerMessage.sig_recipient).to_s +
+                @outerMessage.timestamp.to_s +
+                params[:username].to_s
         # => Signatur ist verifiziert? => http://ruby-doc.org/stdlib-2.0/libdoc/openssl/rdoc/OpenSSL.html
-        # if @pubkey.verify digest, @signature, @data
+        if pubkey.verify digest, Base64.strict_decode64(sig_service), data
         @message = Message.new( :recipient => params[:username],
                                 :sender => @outerMessage.sender,
                                 :cipher => @outerMessage.cipher,
                                 :iv => @outerMessage.iv,
                                 :key_recipient_enc => @outerMessage.key_recipient_enc,
                                 :sig_recipient => @outerMessage.sig_recipient,)
-        # else
-          # render json: { "Status" => "401 Unauthorized"}, status: :unauthorized
-          # logger.info "################# LOG #################"
-          # logger.info "Status: 401 - Unauthorized"
-          # logger.info "################# LOG #################"
-        # => Nachricht wurde gespeichert?
+         else
+           render json: { "Status" => "401 Unauthorized"}, status: :unauthorized
+           logger.info "################# LOG #################"
+           logger.info "Status: 401 - Unauthorized"
+           logger.info "################# LOG #################"
+         # => Nachricht wurde gespeichert?
         if @message.save 
           render json: @message, :only => [:username ,:sender, :cipher, :iv, :key_recipient_enc, :sig_recipient], status: :created
           logger.info "################# LOG #################"
@@ -56,6 +60,7 @@ class MessagesController < ApplicationController
       end
     end
   end
+end
 
   def recieve
     if !User.exists?(username: params[:username])
